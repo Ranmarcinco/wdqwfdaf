@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Poetsen+One&display=swap" rel="stylesheet">
+<title>LIBRARY ATTENDANCE</title>
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<div class="form-container">
+
+  <h2>LIBRARY ATTENDANCE</h2>
+  <form id="dataForm" class="animate__animated animate__fadeInUp"></form>
+  <form id="myForm" action="https://script.google.com/macros/s/AKfycbzycTKD4wdjRgXD0gKpknQe9u0D7GvhHGIc7vO671ul/dev" method="post">
+    
+    
+    <label for="rfid">RFID:</label>  
+    <input type="text" id="rfid" name="rfid" required>
+
+    <label for="completeName">Complete Name:</label>
+    <input type="text" id="firstName" name="FirstName" required>
+
+    <label for="program">Program:</label>  
+    <select type="text" name="program" required>
+      <option value="">Select Program</option> 
+      <option value="BSED">BSED</option>
+      <option value="BEED">BEED</option>
+      <option value="BTVTED">BTVTED</option>
+      <option value="BTLED">BTLED</option>
+      <option value="BSCE">BSCE</option>
+      <option value="BOT">BOT</option>
+      <option value="BSInfo">BSInfo</option>
+      <option value="BSIT">BSIT</option>
+      <option value="BSC">BSC</option>
+      <option value="BAComm">BAComm</option>
+      <option value="BSEntrep">BSEntrep</option>
+      <option value="BSAIS">BSAIS</option>
+      <option value="BSBA">BSBA</option>
+      <option value="BSHM">BSHM</option>
+      <option value="BSTM">BSTM</option>
+      <option value="BSN">BSN</option>
+      <option value="MAM">MAM</option>
+      <option value="JURIS D.">JURIS D.</option>
+      <option value="FACULTY">FACULTY</option>
+      <option value="STAFF">STAFF</option>
+    </select>
+
+    <label for="selectLogType">Select Log Type:</label>
+    <select id="selectLogType" name="selectLogType">
+      <option value="">Select Log Type</option> 
+      <option value="login">Login</option>
+      <option value="logout">Logout</option>
+    </select>
+    
+    <input class="submitButton" type="submit" value="Submit">
+    <a class="back-button" href="maininterface.html">Back</a>
+    <div id="successMessage" style="display: none; color: rgb(255, 255, 255);">Form submission was successful</div>
+   
+  </form>
+  
+</div>
+
+<script>
+document.getElementById("myForm").addEventListener("submit", function() {
+  document.getElementById("successMessage").style.display = "block";
+  setTimeout(function(){ 
+    document.getElementById("successMessage").style.display = "none"; 
+    window.location.reload(); 
+  }, 3000);
+});
+</script>
+
+</body>
+</html>

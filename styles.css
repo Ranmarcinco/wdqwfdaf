@@ -1,0 +1,114 @@
+body {
+  font-family: Arial, sans-serif;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  text-align: center;
+  align-items: center;
+  height: 100vh;
+  background: url('https://wallpaperaccess.com/full/5487841.jpg');
+  background-size: cover;
+  animation: slideIn 2s ease;
+}
+
+.form-container h2 {
+  color: #fdf9f9;
+  font-family: "Poetsen One", sans-serif;
+  font-weight: 500;
+  font-size: xx-large;
+  animation: slideIn 2s ease;
+}
+
+.form-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  max-width: 90%; 
+  margin: 0 auto;
+  padding: 65px; 
+  padding-top: 1%;
+  height: 58%;
+  border-radius: 10px;
+  box-shadow: 0 2px 4px rgba(189, 188, 188, 0.521);
+  color: #ffffff;
+  animation: slideIn 2s ease;
+  width: 400px;
+  background: linear-gradient(#302f2fbd, #070101ad) padding-box,
+              linear-gradient(145deg, transparent 35%,#e81cffb4, #40c9ff96) border-box;
+  border: 2px solid transparent;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+@keyframes slideIn {
+  from {
+    transform: translateY(-50%);
+  }
+  to {
+    transform: translateY(0);
+  }
+}
+form {
+  width: 130%; 
+  animation: slideIn 2s ease;
+}
+
+.form-group {
+  margin-bottom: 15px;
+}
+
+label {
+  display: block;
+  margin-bottom: 5px;
+}
+
+input[type="text"],
+select {
+  margin: 0.4%;
+  width: 70%;
+  padding: 2%;
+  border: 1px solid #ccc;
+  border-radius: 3px;
+}
+
+button {
+  background-color: #ff000043;
+  color: #fff;
+  border: none;
+  padding: 2%;
+  border-radius: 3px;
+  cursor: pointer;
+}
+
+button:hover {
+  background-color: #ffffff;
+}
+
+.submitButton {
+  height: 35px;
+  width: 175px;
+  margin: 10px;
+  border-radius: 10px;
+  background-color: rgb(18, 173, 18);
+  box-shadow: 0 2px 4px rgba(255, 252, 252, 0.932);
+  font-size: larger;
+  color: #fff;
+}
+
+.back-button {
+  color: #fff; 
+  text-decoration: underline; 
+}
+
+.back-button:hover {
+  color: #42ee2b; 
+}
+

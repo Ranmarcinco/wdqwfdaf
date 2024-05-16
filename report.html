@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <base target="_top">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f2f2f2;
+            margin: 20px;
+            position: relative;
+        }
+
+        table {
+            border-collapse: collapse;
+            width: 100%;
+            background-color: #fff;
+            border-radius: 5px;
+            overflow: hidden;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            margin-bottom: 20px;
+        }
+
+        th,
+        td {
+            padding: 4px 7px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+            white-space: nowrap;
+            text-align: center;
+        }
+
+        th {
+            background-color: #70f912;
+            text-align: center;
+            color: #3e64e7;
+        }
+
+        tr:hover {
+            background-color: #f5f5f5;
+        }
+
+        .filter-container {
+            margin-bottom: 20px;
+        }
+
+        .filter-container select {
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            margin-right: 10px;
+        }
+
+        .pdf-button {
+            padding: 10px 20px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        .pdf-button:hover {
+            background-color: #45a049;
+        }
+
+        .hidden-column {
+            display: none;
+        }
+
+        @media screen and (max-width: 600px) {
+            table {
+                overflow-x: auto;
+            }
+        }
+
+        .center-text {
+            text-align: center;
+        }
+
+        .footer {
+            text-align: left;
+            margin-top: 25px;
+            font-size: 14px;
+        }
+    </style>
+</head>
+
+<body>
+    <img src="https://images.app.goo.gl/uaaZDiXEwRUXqqh87" width="100">
+    <br>
+    <center>
+        <h4 id="report-title">MONTHLY REPORT OF LIBRARY USERS</h4>
+        <h5 id="report-year">2024</h5>
+    </center>
+    <table id="data-table">
+        <thead>
+            <tr id="month-header">
+                <!-- Month headers will be populated dynamically -->
+            </tr>
+        </thead>
+        <tbody id="table-body">
+            <!-- Table body content will be populated dynamically -->
+        </tbody>
+    </table>
+    <div class="footer">
+        PREPARED BY: ______________________<br>
+        <span style="margin-left: 120px;">NAME/SIGNATURE</span>
+    </div>
+    <button class="pdf-button" onclick="generatePDF()">Generate PDF</button>
+
+    <script>
+        google.script.run.withSuccessHandler(function (data) {
+            displayData(data);
+        }).getDataFromSheet();
+
+        function displayData(data) {
+            var table = document.getElementById("dataTable");
+            var tbody = document.createElement("tbody");
+
+            data.forEach(function (rowData) {
+                var row = document.createElement("tr");
+                rowData.forEach(function (cellData) {
+                    var cell = document.createElement("td");
+                    cell.appendChild(document.createTextNode(cellData));
+                    row.appendChild(cell);
+                });
+                tbody.appendChild(row);
+            });
+
+            table.appendChild(tbody);
+        }
+
+        function filterData() {
+            var courseFilter = document.getElementById("course-filter").value;
+
+            google.script.run.withSuccessHandler(function (data) {
+                displayData(data, true);
+            }).filterData('', courseFilter, '', '');
+        }
+
+        window.onload = function () {
+            getData();
+        };
+
+        function displayData(data, isFilter) {
+            var tableBody = document.getElementById("table-body");
+            var monthHeader = document.getElementById("month-header");
+
+            var rows = data.split("\n");
+
+            tableBody.innerHTML = "";
+            monthHeader.innerHTML = "<th>PROGRAM</th>";
+
+            var courseCountsByMonth = {};
+            var totalByCourse = {};
+            var totalByMonth = {};
+
+            for (var i = 1; i < rows.length; i++) {
+                if (rows[i]) {
+                    var rowData = rows[i].split("\t");
+                    var date = new Date(rowData[0]);
+
+                    var year = date.getFullYear();
+
+                    if (i === 2) {
+                        document.getElementById('report-year').textContent = year;
+                    }
+
+                    var monthName = date.toLocaleString('en-us', { month: 'long' });
+                    var dateString = date.toLocaleDateString('en-US', {
+                        year: 'numeric',
+                        month: 'numeric',
+                        day: 'numeric'
+                    });
+
+                    if (!courseCountsByMonth[monthName]) {
+                        courseCountsByMonth[monthName] = {
+                            'BSED': 0,
+                            'BEED': 0,
+                            'BTVTED': 0,
+                            'BTLED': 0,
+                            'BSCE': 0,
+                            'BOT': 0,
+                            'BSInfo': 0,
+                            'BSIT': 0,
+                            'BSC': 0,
+                            'BAComm': 0,
+                            'BSEntrep': 0,
+                            'BSAIS': 0,
+                            'BSBA': 0,
+                            'BSHM': 0,
+                            'BSTM': 0,
+                            'BSN': 0,
+                            'MAM': 0,
+                            'MAED EM': 0,
+                            'MAED KE': 0,
+                        };
+                        monthHeader.innerHTML += "<th>" + monthName + "</th>";
+                        totalByMonth[monthName] = 0;
+                    }
+
+                    var course = rowData[3];
+                    courseCountsByMonth[monthName][course] = (courseCountsByMonth[monthName][course] || 0) + 1;
+                    totalByMonth[monthName]++;
+
+                    totalByCourse[course] = (totalByCourse[course] || 0) + 1;
+                }
+            }
+
+            for (var course in courseCountsByMonth[Object.keys(courseCountsByMonth)[0]]) {
+                var row = "<tr>";
+                row += "<td>" + course + "</td>";
+
+                for (var monthName in courseCountsByMonth) {
+                    row += "<td>" + (courseCountsByMonth[monthName][course] || 0) + "</td>";
+                }
+
+                row += "<td>" + (totalByCourse[course] || 0) + "</td>";
+                row += "</tr>";
+                tableBody.innerHTML += row;
+            }
+
+            var totalRow = "<tr><td>TOTAL</td>";
+            for (var monthName in totalByMonth) {
+                totalRow += "<td>" + totalByMonth[monthName] + "</td>";
+            }
+
+            var totalAllCourses = Object.values(totalByCourse).reduce((a, b) => a + b, 0);
+            totalRow += "<td>" + totalAllCourses + "</td>";
+            totalRow += "</tr>";
+
+            monthHeader.innerHTML += "<th>Total</th>";
+            tableBody.innerHTML += totalRow;
+        }
+
+        function generatePDF() {
+            var element = document.getElementById('data-table');
+            var h4 = document.querySelector('h4').outerHTML;
+            var h5 = document.querySelector('h5').outerHTML;
+            var year = document.getElementById('report-year').textContent;
+            var academicYear = year + '-' + (parseInt(year) + 1);
+            var centeredHeader = '<div class="center-text">' + h4 + '<h5>' + academicYear + '</h5>' + '</div>';
+            var tableWithMargin = '<div style="margin: 20px;">' + element.outerHTML + '</div>';
+            var content = centeredHeader + tableWithMargin;
+            var opt = {
+                margin: 10,
+                filename: 'monthly_report.pdf',
+                image: { type: 'jpeg', quality: 0.98 },
+                html2canvas: { scale: 2 },
+                jsPDF: { unit: 'mm', format: 'legal', orientation: 'landscape' }
+            };
+            var footerContent = '<div class="footer">' +
+                'PREPARED BY: ______________________<br>' +
+                '<span style="margin-left: 120px;">NAME/SIGNATURE</span>' +
+                '</div>';
+            content += footerContent;
+            html2pdf().from(content).set(opt).save();
+        }
+    </script>
+</body>
+
+</html>
